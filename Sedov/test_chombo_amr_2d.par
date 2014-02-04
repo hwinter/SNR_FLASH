@@ -1,0 +1,78 @@
+#	Runtime parameters for the Sedov explosion problem.
+
+#	Parameters for initial model
+
+#		Ambient pressure and density, explosion energy, initial
+#		radius of perturbation, and location of explosion center
+
+sim_pAmbient	= 1.E-5
+sim_rhoAmbient	= 1.
+sim_expEnergy	= 1.
+sim_rInit		= 0.013671875
+sim_xctr		= 0.5
+sim_yctr		= 0.5
+sim_zctr		= 0.5
+
+#		Gas ratio of specific heats
+
+gamma           = 1.4
+
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 1.
+ymin		= 0.
+ymax		= 1.
+zmin		= 0.
+zmax		= 1.
+
+#		Boundary conditions
+
+xl_boundary_type      = "outflow"
+xr_boundary_type      = "outflow"
+yl_boundary_type      = "outflow"
+yr_boundary_type      = "outflow"
+zl_boundary_type      = "outflow"
+zr_boundary_type      = "outflow"
+
+#	Simulation (grid, time, I/O) parameters
+
+cfl		= 0.8
+lrefine_max     = 6
+refine_var_1    = "dens"
+refine_var_2    = "pres"
+basenm          = "sedov_2d_6lev_"
+restart         = .false.
+checkpointFileIntervalTime          = 0.002
+nend            = 10000
+
+#CD: Using tmax = 0.01 so regression tests are faster.
+tmax            = 0.01 #0.05
+dtmin		= 2.5D-5
+dtmax		= 2.5D-5
+
+run_comment     = "2D Sedov explosion, from t=0 with sim_rInit = 3.5dx_min"
+log_file        = "sedov_2d_6lev.log"
+eintSwitch     = 0.0
+
+
+#Parameters for Chombo AMR
+#Creates a simulation similar to test_paramesh_2d.par with nxb=nyb=8
+#-----------------------------------------------------------------------
+#Temporarily set to False because it is not handled yet.
+flux_correct = .false.
+
+#[i,j,k]gridsize are the number of cells on the coarsest level.
+igridsize = 8
+jgridsize = 8
+kgridsize = 1
+
+#Maximum block size.
+maxBlockSize = 8
+
+
+#NOTE: igridsize=jgridsize=maxblocksize=16, lrefine_max=6, tmax=0.05 gives
+#a very interesting refinement pattern.  It appears to develop two highly 
+#refined spherical regions; the first region tracks the expanding blast wave,
+#and the second also moves with the expansion but is behind the blast wave.

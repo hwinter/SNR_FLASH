@@ -1,0 +1,67 @@
+#	Runtime parameters for the Sod shock-tube problem.
+#
+#   this setup, with parameters provided to us by Tomek Plewa, 
+#   should generate a nice stationary shock.  This allows a nice
+#   test of the Riemann solver.
+#
+
+#		Density, pressure, and velocity on either side of interface
+
+sim_rhoLeft	= 3.9988003598920323908
+sim_rhoRight	= 1
+sim_pLeft		= .749985
+sim_pRight		= .00006
+sim_uLeft		= -.2500750000
+sim_uRight		= -1.
+
+#		Angle and position of interface relative to x and y axes
+
+sim_xangle		= 0.
+sim_yangle		= 90.
+sim_posn		= 0.5
+
+#		Gas ratio of specific heats
+
+gamma           = 1.666666666666666667
+
+#	Computational volume parameters
+
+#		Grid dimensionality and geometry
+
+geometry = "cartesian"
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 1.
+ymin		= 0.
+ymax		= 1.
+
+#		Boundary conditions
+
+xl_boundary_type = "outflow"
+xr_boundary_type = "outflow"
+
+yl_boundary_type = "outflow"
+yr_boundary_type = "outflow"
+
+
+#	Simulation (grid, time, I/O) parameters
+
+cfl		= 0.1
+lrefine_max     = 2
+lrefine_min     = 2
+basenm          = "sod_stationary_"
+restart         = .false.
+trstrt          = 0.2
+nend            = 1000
+tmax            = 0.2
+nrstrt = 1
+
+run_comment     = "2D stationary shock problem, parallel to x-axis"
+log_file        = "sod_stationary.log"
+
+cvisc = 0.00
+dtini = 1.e-3
+rieman_tol = 1.d-15
+

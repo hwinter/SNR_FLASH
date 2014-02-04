@@ -1,0 +1,109 @@
+#	Runtime parameters for the Sedov explosion problem.
+
+#	Parameters for initial model
+
+#		Ambient pressure and density, explosion energy, initial
+#		radius of perturbation, and location of explosion center
+
+useCollectiveHDF5 = .false.
+
+p_ambient	= 1.E-5
+rho_ambient	= 1.
+exp_energy	= 1.
+r_init		= 0.013671875
+xctr		= 0.5
+yctr		= 0.5
+zctr		= 0.5
+
+#		Gas ratio of specific heats
+
+gamma           = 1.4
+
+#	Computational volume parameters
+
+#		Grid dimensionality and geometry
+
+geometry = "cartesian"
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 1.
+ymin		= 0.
+ymax		= 1.
+zmin		= 0.
+zmax		= 1.
+nblockx = 9
+nblocky = 9
+nblockz = 9
+
+#		Boundary conditions
+
+
+xl_boundary_type = "outflow"
+xr_boundary_type = "outflow"
+
+yl_boundary_type = "outflow"
+yr_boundary_type = "outflow"
+
+zl_boundary_type = "outflow"
+zr_boundary_type = "outflow"
+
+
+
+
+
+#	Simulation (grid, time, I/O) parameters
+
+cfl		= 0.8
+lrefine_max     = 7
+basenm          = "sedov_"
+restart         = .false.
+trstrt          = 0.01
+nend            = 4
+tmax            = 0.05
+
+checkpointFileIntervalStep = 2
+plotFileIntervalStep = 2
+particleFileIntervalStep = 2
+
+plot_var_1 = "dens"
+plot_var_2 = "temp"
+plot_var_3 = "pres"
+
+refine_var_1 = "dens"
+refine_var_2 = "pres"
+
+run_comment     = "Sedov explosion"
+log_file        = "sedov.log"
+eintSwitch     = 1.e-4
+
+
+#These parameters below are only necessary for the Uniform Grid
+# see note below for more explanation
+
+gridImax = 40   #defined as nxb + 2* # guard cells
+gridJmax = 40
+gridKmax = 40
+iGridSize = 32   #defined as nxb * iprocs
+jGridSize = 32
+kGridSize = 32
+iProcs = 1	#num procs in i direction
+jProcs = 1	#num procs in j direction
+kProcs = 1
+
+
+useParticles= .true.
+pt_numX = 100
+pt_numY = 100
+pt_numZ = 4 
+pt_maxPerProc = 40000
+#pt_maxPerBlock=100
+
+sim_vx_amb = 1.0
+sim_seed = 1.0
+sim_vz_pert=1.0
+sim_vy_pert=1.0
+sim_vx_pert=1.0
+
+

@@ -1,0 +1,146 @@
+#	Runtime parameters for the Sedov explosion problem.
+
+#	Parameters for initial model
+
+#		Ambient pressure and density, explosion energy, initial
+#		radius of perturbation, and location of explosion center
+
+sim_pAmbient	= 1.E-5
+sim_rhoAmbient	= 1.
+sim_expEnergy	= 1.
+sim_rInit		= 0.013671875
+sim_xctr		= 0.5
+sim_yctr		= 0.5
+sim_zctr		= 0.5
+
+#		Gas ratio of specific heats
+
+gamma           = 1.4
+
+#	Computational volume parameters
+
+#		Grid dimensionality and geometry
+
+geometry = "cartesian"
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 1.
+ymin		= 0.
+ymax		= 1.
+zmin		= 0.
+zmax		= 1.
+
+#		Boundary conditions
+
+
+xl_boundary_type = "outflow"
+xr_boundary_type = "outflow"
+
+yl_boundary_type = "outflow"
+yr_boundary_type = "outflow"
+
+zl_boundary_type = "outflow"
+zr_boundary_type = "outflow"
+
+
+
+pt_numX = 10
+pt_numY = 10
+
+pt_initialXmin = 0.45
+pt_initialXmax = 0.55
+pt_initialYmin = 0.45
+pt_initialYmax = 0.55
+
+pt_maxPerProc = 100
+
+useParticles = .true.
+
+
+
+#	Simulation time, I/O  parameters
+
+cfl		= 0.8
+basenm          = "sedov_2d_6lev_"
+restart         = .false.
+
+
+#	checkpoint file output parameters
+checkpointFileIntervalTime = 0.01
+checkpointFileIntervalStep = 0
+checkpointFileNumber = 0
+
+#	plotfile output parameters
+plotfileIntervalTime = 0.
+plotfileIntervalStep = 0
+plotfileNumber = 0
+
+nend            = 10000
+tmax            = 0.05
+
+run_comment     = "Sedov explosion"
+log_file        = "sedov.log"
+eintSwitch     = 1.e-4
+
+plot_var_1 = "dens"
+plot_var_2 = "pres"
+plot_var_3 = "temp"
+
+#  Adaptvie Grid refinement parameters
+
+lrefine_max     = 6
+refine_var_1 = "dens"
+refine_var_2 = "pres"
+convertToConsvdInMeshInterp = .true.
+
+# Uniform Grid specific parameters 
+# see note below for more explanation
+
+#iGridSize = 8   #global number of gridpoints along x, excluding gcells
+#jGridSize = 8   #global number of gridpoints along y, excluding gcells
+#kGridSize = 1
+iProcs = 1	#num procs in i direction
+jProcs = 1	#num procs in j direction
+kProcs = 1
+
+
+# When using UG, iProcs, jProcs and kProcs must be specified.
+# These are the processors along each of the dimensions
+#FIXEDBLOCKSIZE mode ::
+# When using fixed blocksize, iGridSize etc are redundant in
+# runtime parameters. These quantities are calculated as 
+# iGridSize = NXB*iprocs
+# jGridSize = NYB*jprocs
+# kGridSize = NZB*kprocs
+#NONFIXEDBLOCKSIZE mode ::
+# iGridSize etc must be specified. They constitute the global
+# number of grid points in the physical domain without taking 
+# the guard cell into account. The local blocksize is calculated
+# as iGridSize/iprocs  etc.
+
+## -------------------------------------------------------------##
+##  SWITCHES SPECIFIC TO THE UNSPLIT HYDRO SOLVER               ##
+#       I. INTERPOLATION SCHEME:
+order           = 2      # Interpolation order (First/Second order)
+slopeLimiter    = "mc"   # Slope limiters (minmod, mc, vanLeer, hybrid, limited)
+LimitedSlopeBeta= 1.     # Slope parameter for the "limited" slope by Toro
+charLimiting    = .true. # Characteristic limiting vs. Primitive limiting
+
+
+#       II. RIEMANN SOLVERS:
+RiemannSolver   = "Roe"       # Roe, HLL, HLLC, LF
+shockInstabilityFix = .true. # Carbuncle instability fix for the Roe solver
+
+
+#       III. STRONG SHOCK HANDELING SCHEME:
+shockDetect     = .false.     # Shock Detect for numerical stability
+## -------------------------------------------------------------##
+
+
+#Must set this runtime parameter to write a custom particle subset.
+writeParticleSubset = .true.
+
+#Make the particle file smaller by not writing the full particles array.
+writeParticleAll = .false.

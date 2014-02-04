@@ -1,0 +1,88 @@
+#	Runtime parameters for the Sedov explosion problem.
+
+#	Parameters for initial model
+
+#		Ambient pressure and density, explosion energy, initial
+#		radius of perturbation, and location of explosion center
+
+sim_pAmbient	= 1.E-5
+sim_rhoAmbient	= 1.
+sim_expEnergy	= 1.
+sim_rInit		= 0.109375
+sim_xctr		= 0.5
+sim_yctr		= 0.5
+sim_zctr		= 0.5
+
+#		Gas ratio of specific heats
+
+gamma           = 1.4
+
+pt_numX = 10
+pt_numY = 10
+pt_numZ = 10
+
+pt_initialXmin = 0.45
+pt_initialXmax = 0.55
+pt_initialYmin = 0.45
+pt_initialYmax = 0.55
+pt_initialZmin = 0.45
+pt_initialZmax = 0.55
+
+
+pt_maxPerProc = 2000
+
+useParticles = .true.
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 1.
+ymin		= 0.
+ymax		= 1.
+zmin		= 0.
+zmax		= 1.
+
+#		Boundary conditions
+
+xl_boundary_type      = "outflow"
+xr_boundary_type      = "outflow"
+yl_boundary_type      = "outflow"
+yr_boundary_type      = "outflow"
+zl_boundary_type      = "outflow"
+zr_boundary_type      = "outflow"
+
+#	Simulation (grid, time, I/O) parameters
+
+cfl		= 0.8
+lrefine_max     = 3
+refine_var_1    = "dens"
+refine_var_2    = "pres"
+basenm          = "sedov_3d_3lev_"
+restart         = .false.
+checkpointFileIntervalTime          = 0.02
+nend            = 1000
+tmax            = 0.02
+convertToConsvdInMeshInterp = .true.
+
+run_comment     = "3D Sedov explosion, from t=0 with sim_rInit = 3.5dx_min"
+log_file        = "sedov_3d_3lev.log"
+eintSwitch     = 1.e-4
+
+## -------------------------------------------------------------##
+##  SWITCHES SPECIFIC TO THE UNSPLIT HYDRO SOLVER               ##
+#       I. INTERPOLATION SCHEME:
+order           = 2      # Interpolation order (First/Second order)
+slopeLimiter    = "mc"   # Slope limiters (minmod, mc, vanLeer, hybrid, limited)
+LimitedSlopeBeta= 1.     # Slope parameter for the "limited" slope by Toro
+charLimiting    = .true. # Characteristic limiting vs. Primitive limiting
+
+
+#       II. RIEMANN SOLVERS:
+RiemannSolver   = "hllc"       # Roe, HLL, HLLC, LF
+shockInstabilityFix = .false. # Carbuncle instability fix for the Roe solver
+
+
+#       III. STRONG SHOCK HANDELING SCHEME:
+shockDetect     = .false.     # Shock Detect for numerical stability
+## -------------------------------------------------------------##
+

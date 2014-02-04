@@ -1,0 +1,49 @@
+#	Runtime parameters for the Sod shock-tube problem.
+
+#	Parameters for initial model
+
+#		Density, pressure, and velocity on either side of interface
+
+iprocs = 8
+
+sim_rhoLeft	= 1.
+sim_rhoRight	= 0.125
+sim_pLeft		= 1.
+sim_pRight		= 0.1
+sim_uLeft		= 0.
+sim_uRight		= 0.
+
+#		Angle and position of interface relative to x and y axes
+
+sim_xangle		= 0.
+sim_yangle		= 90.
+sim_posn		= 0.5
+
+#		Gas ratio of specific heats
+
+gamma           = 1.4
+
+#	Computational volume parameters
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 1.
+
+#		Boundary conditions
+
+xl_boundary_type      = "outflow"
+xr_boundary_type      = "outflow"
+
+#	Simulation (grid, time, I/O) parameters
+
+cfl		= 0.8
+basenm          = "sod_1d_64pt_"
+restart         = .false.
+checkpointFileIntervalTime          = 0.2
+nend            = 1000
+tmax            = 0.2
+
+run_comment	= "1D Sod problem"
+log_file	= "sod_1d_64pt.log"
+eintSwitch     = 1.e-4

@@ -1,0 +1,78 @@
+#	Runtime parameters for the Sod shock-tube problem.
+
+#	Parameters for initial model
+
+#		Density, pressure, and velocity on either side of interface
+
+sim_rhoLeft	= 1.
+sim_rhoRight	= 0.125
+sim_pLeft		= 1.
+sim_pRight		= 0.1
+sim_uLeft		= 0.
+sim_uRight		= 0.
+
+#		Angle and position of interface relative to x and y axes
+
+sim_xangle		= 45.
+sim_yangle		= 90.
+sim_posn		= 1.
+
+#		Gas ratio of specific heats
+
+gamma           = 1.4
+
+#	Computational volume parameters
+
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 1.
+ymin		= 0.
+ymax		= 1.
+
+#		Boundary conditions
+
+xl_boundary_type      = "outflow"
+xr_boundary_type      = "outflow"
+yl_boundary_type      = "outflow"
+yr_boundary_type      = "outflow"
+
+#	Simulation (grid, time, I/O) parameters
+
+igridsize = 8
+jgridsize = 8
+maxBlockSize = 8
+flux_correct = .false.
+
+#Turning off regridding (i.e. setting nrefs=10000) achieves convergence
+#in riemann.
+nrefs = 2
+
+#The default refine_cutoff_1 value of 0.8 leads to non-convergence
+#in Riemann in the first few time advancements.  A value of 0.6 does not
+#suffer from this problem.
+#
+#Dan believes that the problem is because of fine-coarse interpolation
+#in a region of the domain where there are sharp features.  Tagging more
+#cells avoids the troublesome fine-coarse boundary over sharp features.
+#Dan says flux conservation will help with convergence, but the real
+#solution is to avoid fine-coarse interfaces where there are steep gradients.
+#
+#NOTE!!! Uncomment the following line to achieve Riemann convergence.
+#refine_cutoff_1 = 0.6
+
+cfl		= 0.8
+lrefine_max     = 6
+refine_var_1    = "dens"
+basenm          = "sod_2d_45deg_6lev_"
+restart         = .false.
+checkpointFileIntervalTime          = 0.04
+nend            = 1000
+tmax            = 0.2
+convertToConsvdInMeshInterp = .true.
+
+
+run_comment     = "2D Sod, 45 degree angle, particles"
+log_file        = "sod_2d_45deg_6lev.log"
+eintSwitch     = 1.e-4

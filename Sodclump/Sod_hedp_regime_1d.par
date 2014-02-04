@@ -1,0 +1,172 @@
+#	Runtime parameters for the Sod shock-tube problem.
+
+#	Parameters for initial model
+
+#		Density, pressure, and velocity on either side of interface
+
+sim_rhoLeft	= 1.
+sim_rhoRight	= 0.125
+sim_pLeft		= 1.E14
+sim_pRight		= 1.E13
+sim_uLeft		= 0.
+sim_uRight		= 0.
+
+#		Angle and position of interface relative to x and y axes
+
+# These settings are better for testing 3-d problem, they are little
+# less symmetric.
+#
+#sim_xangle		= 45.
+#sim_yangle		= 45.
+#sim_posn		= 1.0  
+
+# To get a simpler test problem which shows the 1-D Profile
+# use the following values.
+sim_xangle		= 0
+sim_yangle		= 90.
+sim_posn		= 0.5
+
+#		Gas ratio of specific heats
+
+gamma                          = 1.6666666666666667
+gammaEle                       = 1.6666666666666667
+gammaIon                       = 1.6666666666666667
+
+eos_singleSpeciesA = 12
+eos_singleSpeciesZ = 6
+
+cond_constantIsochoric = 2.0E9
+useConductivity = .false.
+useHydro = .TRUE.
+useHeatexchange=.false.
+useDiffuse = .false.
+useDiffuseVisc = .false.
+useDiffuseSpecies = .false.
+
+hx_coulombLog = 8.5e-3
+hx_couplingConst23 = 0.0
+hx_couplingConst13 = 0.0
+
+hx_relTol = 1.e-12
+
+#               Artificial viscosity
+
+cvisc           = 0.
+
+#	Computational volume parameters
+
+#		Grid dimensionality and geometry
+
+geometry = cartesian
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 1.
+ymin		= 0.
+ymax		= 1.
+
+#		Boundary conditions
+
+xl_boundary_type = "outflow"
+xr_boundary_type = "outflow"
+
+yl_boundary_type = "outflow"
+yr_boundary_type = "outflow"
+
+
+#	Simulation (grid, time, I/O) parameters
+
+cfl		= 0.8
+hx_dtFactor = 0.05 # 0.01
+
+basenm          = "sod_"
+restart         = .false.
+
+#	checkpoint file output parameters
+checkpointFileIntervalTime = 0.2E-7
+checkpointFileIntervalStep = 1
+checkpointFileNumber = 0
+
+#	plotfile output parameters
+plotfileIntervalTime = 0.
+plotfileIntervalStep = 0
+plotfileNumber = 0
+
+nend            = 250 # 2000
+tmax            = .4E-7
+
+dtinit                         = 1.E-17
+dtmax                          = 1.E5
+dtmin                          = 1.E-17
+
+dr_shortenLastStepBeforeTMax = .TRUE.
+
+run_comment     = "Sod problem, X direction"
+log_file        = "sod.log"
+
+ppmEintFluxConstructionMeth = 0
+ppmEintCompFluxConstructionMeth = 5
+ppmEnerFluxConstructionMeth = 0
+#ppmEnerCompFluxConstructionMeth = 22
+use_steepening = .FALSE.
+
+eintSwitch     = 1.e-4
+eint1Switch     = 1e30 #1000000.
+eint2Switch     = 1e30 #1000000.
+eint3Switch     = 1e30
+
+
+plot_var_1 = "dens"
+plot_var_2 = "pres"
+plot_var_3 = "temp"
+
+#    AMR refinement parameters  
+lrefine_max     = 6
+refine_var_1    = "dens"
+
+# These parameters are used only for the uniform grid
+
+
+#iGridSize = 8   #defined as nxb * iprocs
+#jGridSize = 8
+#kGridSize = 1
+iProcs = 1	#number or procs in the i direction	
+jProcs = 1
+kProcs = 1
+
+# When using UG, iProcs, jProcs and kProcs must be specified.
+# These are the processors along each of the dimensions
+#FIXEDBLOCKSIZE mode ::
+# When using fixed blocksize, iGridSize etc are redundant in
+# runtime parameters. These quantities are calculated as 
+# iGridSize = NXB*iprocs
+# jGridSize = NYB*jprocs
+# kGridSize = NZB*kprocs
+#NONFIXEDBLOCKSIZE mode ::
+# iGridSize etc must be specified. They constitute the global
+# number of grid points in the physical domain without taking 
+# the guard cell into account. The local blocksize is calculated
+# as iGridSize/iprocs  etc.
+ 
+ 
+## -------------------------------------------------------------##
+##  SWITCHES SPECIFIC TO THE UNSPLIT HYDRO SOLVER               ##
+#	I. INTERPOLATION SCHEME:
+order		= 2      # Interpolation order (First/Second order)
+slopeLimiter    = "mc"   # Slope limiters (minmod, mc, vanLeer, hybrid, limited)
+LimitedSlopeBeta= 1.     # Slope parameter for the "limited" slope by Toro
+charLimiting	= .true. # Characteristic limiting vs. Primitive limiting
+
+
+#	II. RIEMANN SOLVERS:
+RiemannSolver	= "Roe"       # Roe, HLL, HLLC, LF
+shockInstabilityFix = .false. # Carbuncle instability fix for the Roe solver
+
+
+#	III. STRONG SHOCK HANDELING SCHEME:
+shockDetect	= .false.     # Shock Detect for numerical stability
+## -------------------------------------------------------------##
+
+eosModeInit                    = "dens_ie_gather"
+eosMode                        = "dens_ie_gather"

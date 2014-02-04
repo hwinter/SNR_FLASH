@@ -1,0 +1,71 @@
+#	Runtime parameters for the Sod-like problem.
+
+#	Parameters for initial model
+
+#		Density, pressure, and velocity on either side of interface
+
+sim_rhoLeft	= 1.
+sim_rhoRight	= 0.125
+sim_pLeft		= 1.
+sim_pRight		= 0.1
+sim_uLeft		= 0.
+sim_uRight		= 0.
+
+#		Angle and position of interface relative to x and y axes
+
+sim_xangle		= 0.
+sim_yangle		= 90.
+sim_posn		= 0.4
+
+#		Gas ratio of specific heats
+
+gamma           = 1.4
+
+#	Computational volume parameters
+
+#               Grid dimensionality and geometry
+
+geometry = spherical
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 1.
+ymin	= 0.0
+ymax	= 0.5
+
+#		Boundary conditions
+
+xl_boundary_type      = "reflecting"
+xr_boundary_type      = "outflow"
+
+#       checkpoint file output parameters
+checkpointFileIntervalTime = 0.01
+checkpointFileIntervalStep = 0
+checkpointFileNumber = 0
+
+#       plotfile output parameters
+plotfileIntervalTime = 0.
+plotfileIntervalStep = 0
+plotfileNumber = 0
+plot_var_1 = "dens"
+plot_var_2 = "pres"
+plot_var_3 = "temp"
+
+
+#	Simulation (grid, time, I/O) parameters
+
+cfl		= 0.8
+lrefine_max     = 10
+refine_var_1    = "dens"
+basenm          = "sod_1d_"
+restart         = .false.
+nend            = 5000
+tmax            = 0.25
+
+convertToConsvdInMeshInterp = .FALSE.
+convertToConsvdForMeshCalls = .FALSE.
+
+run_comment	= "1D Sod-like problem"
+log_file	= "sod_1d.log"
+eintSwitch     = 1.e-4

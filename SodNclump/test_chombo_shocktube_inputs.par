@@ -1,0 +1,131 @@
+# Runtime parameters for the Sod shock-tube problem.
+#
+# The parameters are chosen to match Chombo's execPolytropic application
+# with shocktube.inputs parameter file.
+#
+# Setup using either Paramesh or Chombo:
+# ./setup Sod -auto -2d -nxb=16 -nyb=16 -parfile=test_chombo_shocktube_inputs.par
+# ./setup Sod -auto -parfile=test_chombo_shocktube_inputs.par +chombo_amr
+# To create the same size simulation for Chombo and Paramesh set
+# refRatio to 2 and lrefine_max to 4.
+#
+# Use visit to generate png images and then create a movie:
+# convert -verbose -resize 512x512 -delay 50 $(pwd)/*.png movie.mpeg
+# mplayer movie.mpeg
+#
+# Parameters for initial model
+# Density, pressure, and velocity on either side of interface
+# Left in flash.par corresponds to right in shocktube.inputs for some reason?
+# 
+sim_rhoLeft = 8.0  #Corresponds to shockTube.rhoRight
+sim_rhoRight = 1.4 #Corresponds to shockTube.rhoLeft
+sim_pLeft = 116.5  #Calculated using ener expression in Simulation_initBlock (vel = 0)
+sim_pRight = 2.    #Calculated using ener expression in Simulation_initBlock (vel = 0)
+sim_uLeft = 0.     #Corresponds to shockTube.initial_velocity (element 0)
+sim_uRight = 0.    #Corresponds to shockTube.initial_velocity (element 1)
+
+# Angle and position of interface relative to x and y axes
+sim_xangle		= 0
+sim_yangle		= 90.
+sim_posn		= 0.5  #Corresponds to shockTube.initial_center
+
+
+#		Gas ratio of specific heats
+
+gamma           = 1.4  #Corresponds to godunov.gamma
+
+#	Computational volume parameters
+
+#		Grid dimensionality and geometry
+
+geometry = cartesian
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 1.
+ymin		= 0.
+ymax		= 0.25
+
+#		Boundary conditions
+
+xl_boundary_type = "periodic"
+xr_boundary_type = "periodic"
+
+yl_boundary_type = "periodic"
+yr_boundary_type = "periodic"
+
+
+#	Simulation (grid, time, I/O) parameters
+
+cfl		= 0.8
+basenm          = "sod_"
+restart         = .false.
+
+#	checkpoint file output parameters
+checkpointFileIntervalTime = 0.0016
+checkpointFileIntervalStep = 999999
+checkpointFileNumber = 0
+
+#	plotfile output parameters
+plotfileIntervalTime = 0.
+plotfileIntervalStep = 0
+plotfileNumber = 0
+
+nend            = 1000
+tmax            = 0.047
+
+run_comment     = "Sod problem, diagonal direction"
+log_file        = "sod.log"
+eintSwitch     = 0.0
+
+
+plot_var_1 = "dens"
+plot_var_2 = "pres"
+plot_var_3 = "temp"
+
+# AMR refinement parameters
+refine_var_1    = "dens"
+
+flux_correct = .false.
+convertToConsvdForMeshCalls = .true.
+convertToConsvdInMeshInterp = .false.
+
+
+# Paramesh
+#lrefine_max     = 4
+nblockx = 4  #ignored by Chombo
+nblocky = 1  #ignored by Chombo
+
+# Chombo
+iGridSize = 64   #Corresponds to godunov.num_cells (element 0)
+jGridSize = 16   #Corresponds to godunov.num_cells (element 1)
+kGridSize = 16   #Corresponds to godunov.num_cells (element 2)
+maxblocksize = 64  #Corresponds to godunov.max_grid_size
+refRatio = 4
+lrefine_max = 2
+restrictBeforeGhostExchange = .true.
+
+#This level of verbosity is used to create files named pout.pid
+#containing the change in integrated quantities.
+#grep "dens" pout.0
+verbosity = 2
+
+ 
+## -------------------------------------------------------------##
+##  SWITCHES SPECIFIC TO THE UNSPLIT HYDRO SOLVER               ##
+#	I. INTERPOLATION SCHEME:
+order		= 2      # Interpolation order (First/Second order)
+slopeLimiter    = "mc"   # Slope limiters (minmod, mc, vanLeer, hybrid, limited)
+LimitedSlopeBeta= 1.     # Slope parameter for the "limited" slope by Toro
+charLimiting	= .true. # Characteristic limiting vs. Primitive limiting
+
+
+#	II. RIEMANN SOLVERS:
+RiemannSolver	= "Roe"       # Roe, HLL, HLLC, LF
+shockInstabilityFix = .false. # Carbuncle instability fix for the Roe solver
+
+
+#	III. STRONG SHOCK HANDELING SCHEME:
+shockDetect	= .false.     # Shock Detect for numerical stability
+## -------------------------------------------------------------##

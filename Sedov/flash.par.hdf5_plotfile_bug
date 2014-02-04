@@ -1,0 +1,82 @@
+#	Runtime parameters for the Sedov explosion problem.
+
+#	Parameters for initial model
+
+#		Ambient pressure and density, explosion energy, initial
+#		radius of perturbation, and location of explosion center
+
+
+# Data in plotfiles is mixed up when enabling collective IO HDF5 mode and
+# running on surveyor.  You need to adjust io_h5write_allunknowns.c so that 
+# plotfiles contain double precision data to reproduce problem, i.e.
+# +/*    dataTypeInFile = H5T_NATIVE_FLOAT;*/
+# +    dataTypeInFile = H5T_NATIVE_DOUBLE;
+# Problem does not appear in independent IO HDF5 mode.
+# NOTE: This is for experimental IO code only (uses MPI derived datatypes).
+
+# Setup line:
+# ./setup Sedov -auto +parallelIO -debug +cube16 +pm4dev -parfile=flash.par.hdf5_plotfile_bug -3d -maxblocks=90 --with-unit=IO/IOMain/hdf5/parallel/PM_argonne
+# Run on 4 cores.  Modify useCollectiveHDF5 flag.
+
+
+useCollectiveHDF5 = .true.
+eachProcWritesSummary = .false.
+
+
+sim_pAmbient	= 1.E-5
+sim_rhoAmbient	= 1.
+sim_expEnergy	= 1.
+sim_rInit		= 0.109375
+sim_xctr		= 0.5
+sim_yctr		= 0.5
+sim_zctr		= 0.5
+
+#		Gas ratio of specific heats
+
+gamma           = 1.4
+
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 1.
+ymin		= 0.
+ymax		= 1.
+zmin		= 0.
+zmax		= 1.
+
+#		Boundary conditions
+
+xl_boundary_type      = "outflow"
+xr_boundary_type      = "outflow"
+yl_boundary_type      = "outflow"
+yr_boundary_type      = "outflow"
+zl_boundary_type      = "outflow"
+zr_boundary_type      = "outflow"
+
+#	Simulation (grid, time, I/O) parameters
+
+cfl		= 0.8
+lrefine_max     = 3
+refine_var_1    = "dens"
+refine_var_2    = "pres"
+basenm          = "sedov_3d_3lev_"
+restart         = .false.
+checkpointFileIntervalTime          = 0.02
+nend            = 1
+tmax            = 0.02
+
+checkpointFileIntervalStep = 1
+plotFileIntervalStep = 1
+particleFileIntervalStep = 1
+
+
+run_comment     = "3D Sedov explosion, from t=0 with sim_rInit = 3.5dx_min"
+log_file        = "sedov_3d_3lev.log"
+eintSwitch     = 1.e-4
+
+
+plot_var_1 = "dens"
+plot_var_2 = "temp"
+plot_var_3 = "pres"
+

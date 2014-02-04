@@ -1,0 +1,51 @@
+#	Runtime parameters for the Sedov explosion problem.
+
+#	Parameters for initial model
+
+#		Ambient pressure and density, explosion energy, initial
+#		radius of perturbation, and location of explosion center
+
+# Grid information
+
+iprocs = 8
+
+sim_pAmbient	= 1.E-5
+sim_rhoAmbient	= 1.
+sim_expEnergy	= 1.
+sim_rInit		= 0.013671875
+sim_xctr		= 0.5
+sim_yctr		= 0.5
+sim_zctr		= 0.5
+
+#		Gas ratio of specific heats
+
+gamma           = 1.4
+
+#	Computational volume parameters
+
+#		Grid dimensionality and geometry
+
+geometry = "cartesian"
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 1.
+
+#		Boundary conditions
+#
+xl_boundary_type      = "outflow"
+xr_boundary_type      = "outflow"
+
+#	Simulation (grid, time, I/O) parameters
+
+cfl		= 0.8
+basenm          = "sedov_ug_1d_1p_"
+restart         = .false.
+checkpointFileIntervalTime          = 0.01
+nend            = 10000
+tmax            = 0.05
+
+run_comment     = "1D Sedov explosion, from t=0 with sim_rInit = 3.5dx_min"
+log_file        = "sedov_ug_1d.log"
+eintSwitch     = 1.e-4

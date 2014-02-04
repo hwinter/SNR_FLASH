@@ -1,0 +1,57 @@
+#	Runtime parameters for the Sod-like cylindrical problem.
+
+#	Parameters for initial model
+
+#		Density, pressure, and velocity on either side of interface
+
+sim_rhoLeft	= 1.
+sim_rhoRight	= 0.125
+sim_pLeft		= 1.
+sim_pRight		= 0.1
+sim_uLeft		= 0.
+sim_uRight		= 0.
+
+#		Angle and position of interface relative to x and y axes
+
+sim_xangle		= 0.
+sim_yangle		= 90.
+sim_posn		= 0.4
+
+#		Gas ratio of specific heats
+
+gamma           = 1.4
+
+#	Computational volume parameters
+
+#               Grid dimensionality and geometry
+
+geometry = cylindrical
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 1.
+ymin	= 0.0
+ymax	= 1.0
+
+#		Boundary conditions
+
+xl_boundary_type      = "reflecting"
+xr_boundary_type      = "outflow"
+
+#	Simulation (grid, time, I/O) parameters
+
+cfl		= 0.8
+lrefine_max     = 8
+refine_var_1    = "dens"
+basenm          = "sod_cyl_"
+restart         = .true.
+#checkpointFileNumber = 1
+EcheckpointFileIntervalTime = 0.05
+checkpointFileIntervalStep = 2
+nend            = 4
+tmax            = 0.30
+
+run_comment	= "Sod-like cylindrical problem"
+log_file	= "sod_cyl.log"
+eintSwitch     = 1.e-4

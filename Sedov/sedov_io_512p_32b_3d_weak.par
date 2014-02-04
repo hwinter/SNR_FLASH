@@ -1,0 +1,129 @@
+# Runtime parameters for the Sedov explosion problem.
+#
+# ----------------------------------------------------------------------
+# This parameter file is designed to be used for weak scaling I/O
+# benchmarks and not science.  It is based upon test_paramesh_3d.par.  
+# It will cause FLASH to run 4 time steps and output 
+# a checkpoint file and plot file each and every time step.
+#
+# Setup lines:
+# ./setup Sedov -auto +pm4dev -maxblocks=90 -3d +cube16 -objdir=flash_pnet
+# --with-unit=IO/IOMain/pnetcdf/PM_argonne
+# -parfile=sedov_io_512p_32b_3d_weak.par
+#
+# ./setup Sedov -auto +pm4dev -maxblocks=90 -3d +cube16 -objdir=flash_hdf5
+# --with-unit=IO/IOMain/hdf5/parallel/PM_argonne
+# -parfile=sedov_io_512p_32b_3d_weak.par
+#
+#
+# Tunable I/O parameters:
+#
+# Parameter name         Library          Valid values
+# fileFormatVersion      HDF5 & Pnetcdf   9, 10
+# useCollectiveHDF5      HDF5             .true., .false.
+# packMeshPlotWriteHDF5  HDF5             .true., .false.
+# packMeshChkWriteHDF5   HDF5             .true., .false.
+# packMeshChkReadHDF5    HDF5             .true., .false.
+# asyncMeshPlotWritePnet Pnetcdf          .true., .false.
+# asyncMeshChkWritePnet  Pnetcdf          .true., .false.
+# asyncMeshChkReadPnet   Pnetcdf          .true., .false.
+#
+# fileFormat version 9 indicates standard FLASH I/O format where each
+# mesh variable (e.g. dens, pres) is written to a separate dataset in
+# the output file.  fileFormat version 10 indicates all mesh variables
+# are written to the same dataset in the output file.
+#
+# useCollectiveHDF5 is a switch for independent or collective HDF5.
+#
+# packMeshPlotWriteHDF5, packMeshChkWriteHDF5, packMeshChkReadHDF5 are
+# used to pack mesh data into a new buffer using the mesh MPI datatypes
+# with the MPI_Pack and MPI_Unpack functions.  It is a useful option 
+# for plotfiles where a type conversion (double precision in memory to  
+# single precision in file) prevents HDF5 collective I/O optimizations.
+# I would expect that the only useful parameter is packMeshPlotWriteHDF5,
+# the other parameters, packMeshChkWriteHDF5 and packMeshChkReadHDF5
+# are only provided for completeness.
+#
+# asyncMeshPlotWritePnet, asyncMeshChkWritePnet, asyncMeshChkReadPnet
+# are used to replace ncmpi_put_vara_all, ncmpi_get_vara_all library
+# calls with ncmpi_iput_vara, ncmpi_iget_vara.  I would expect it is
+# most useful when used in conjunction with fileFormatVersion = 9 as
+# here the N mesh variables (and so N library calls) are transferred
+# asynchronously.
+#
+
+fileFormatVersion = 9
+
+useCollectiveHDF5 = .true.
+packMeshPlotWriteHDF5 = .false.
+packMeshChkWriteHDF5 = .false.
+packMeshChkReadHDF5 = .false.
+
+asyncMeshPlotWritePnet = .false.
+asyncMeshChkWritePnet = .false.
+asyncMeshChkReadPnet = .false.
+eachProcWritesSummary = .false.
+
+# ----------------------------------------------------------------------
+
+
+#	Parameters for initial model
+
+#		Ambient pressure and density, explosion energy, initial
+#		radius of perturbation, and location of explosion center
+
+sim_pAmbient	= 1.E-5
+sim_rhoAmbient	= 1.
+sim_expEnergy	= 1.
+sim_rInit		= 0.109375
+sim_xctr		= 0.5
+sim_yctr		= 0.5
+sim_zctr		= 0.5
+
+#		Gas ratio of specific heats
+
+gamma           = 1.4
+
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 1.
+ymin		= 0.
+ymax		= 1.
+zmin		= 0.
+zmax		= 1.
+
+#		Boundary conditions
+
+xl_boundary_type      = "outflow"
+xr_boundary_type      = "outflow"
+yl_boundary_type      = "outflow"
+yr_boundary_type      = "outflow"
+zl_boundary_type      = "outflow"
+zr_boundary_type      = "outflow"
+
+#	Simulation (grid, time, I/O) parameters
+
+cfl		= 0.8
+lrefine_min     = 5
+lrefine_max     = 5
+nblockx         = 1
+nblocky         = 2
+nblockz         = 2
+refine_var_1    = "dens"
+refine_var_2    = "pres"
+basenm          = "sedov_3d_3lev_"
+restart         = .false.
+checkpointFileIntervalStep = 1
+plotFileIntervalStep = 1
+particleFileIntervalStep = 1
+plot_var_1      = "dens"
+plot_var_2      = "pres"
+plot_var_3      = "temp"
+nend            = 4
+tmax            = 0.05
+
+run_comment     = "3D Sedov explosion, from t=0 with sim_rInit = 3.5dx_min"
+log_file        = "sedov_3d_3lev.log"
+eintSwitch     = 1.e-4

@@ -1,0 +1,161 @@
+#	Runtime parameters for the Sod shock-tube problem.
+#################################################################
+#	Parameters for initial model
+
+#		Density, pressure, and velocity on either side of interface
+
+sim_rhoLeft	=0.125
+sim_rhoRight	= 0.125
+sim_pLeft		= 0.1
+sim_pRight		= 0.1
+sim_uLeft		= .
+sim_uRight		= 00.
+
+#		Angle and position of interface relative to x and y axes
+
+# These settings are better for testing 3-d problem, they are little
+# less symmetric.
+
+sim_xangle		=0.
+sim_yangle		= 90.
+sim_posn		= 1.0  
+
+# To get a simpler test problem which shows the 1-D Profile
+# use the following values.
+#sim_xangle		= 0
+#sim_yangle		= 90.
+#sim_posn		= 0.5
+
+#################################################################
+#  Clump parameters rho and pressure are added to background values.
+sim_cposx=  2.5
+sim_cposy=  2.5
+sim_crad=    0.5
+sim_crho=    5
+sim_cp=        0.1
+#################################################################
+
+
+#		Gas ratio of specific heats
+
+gamma           = 1.4
+#################################################################
+#	Computational volume parameters
+
+#		Grid dimensionality and geometry
+
+geometry = cartesian
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 5.
+ymin		= 0.
+ymax		= 5.
+
+#		Boundary conditions
+
+xl_boundary_type = "outflow"
+xr_boundary_type = "outflow"
+
+yl_boundary_type = "outflow"
+yr_boundary_type = "outflow"
+
+#################################################################
+#	Simulation (grid, time, I/O) parameters
+
+cfl		= 0.8
+basenm          = "sodclump_"
+restart         = .false.
+
+#	checkpoint file output parameters
+checkpointFileIntervalTime = 0.2
+checkpointFileIntervalStep = 0
+checkpointFileNumber = 0
+
+#	plotfile output parameters
+plotfileIntervalTime = 0.2
+plotfileIntervalStep = 10
+plotfileNumber = 0
+
+nend            = 1000
+tmax            = 15
+
+run_comment     = "Sod problem, with a clump of material"
+log_file        = "sodClump.log"
+eintSwitch     = 1.e-4
+
+
+plot_var_1 = "dens"
+plot_var_2 = "pres"
+plot_var_3 = "temp"
+plot_var_4 = "velx"
+plot_var_5 = "vely"
+plot_var_6 = "velz"
+
+#    AMR refinement parameters  
+lrefine_max     = 4
+refine_var_1    = "dens"
+refine_var_2    = "temp"
+refine_var_3    = "press"
+refine_var_4    = "velx"
+refine_var_5    = "vely"
+
+
+# These parameters are used only for the uniform grid
+
+
+#iGridSize = 6   #defined as nxb * iprocs
+#jGridSize = 6
+#kGridSize = 1
+iProcs = 1	#number or procs in the i direction	
+jProcs = 1
+kProcs = 1
+
+# When using UG, iProcs, jProcs and kProcs must be specified.
+# These are the processors along each of the dimensions
+#FIXEDBLOCKSIZE mode ::
+# When using fixed blocksize, iGridSize etc are redundant in
+# runtime parameters. These quantities are calculated as 
+# iGridSize = NXB*iprocs
+# jGridSize = NYB*jprocs
+# kGridSize = NZB*kprocs
+#NONFIXEDBLOCKSIZE mode ::
+# iGridSize etc must be specified. They constitute the global
+# number of grid points in the physical domain without taking 
+# the guard cell into account. The local blocksize is calculated
+# as iGridSize/iprocs  etc.
+ 
+## -------------------------------------------------------------##
+##  SWITCH to turn on conduction             ##
+useConductivity=.true.
+## -------------------------------------------------------------##
+##  SWITCHES SPECIFIC TO THE UNSPLIT HYDRO SOLVER               ##
+#	I. INTERPOLATION SCHEME:
+order		= 2      # Interpolation order (first/second/third/fifth order)
+slopeLimiter    = "mc"   # Slope limiters (minmod, mc, vanLeer, hybrid, limited)
+LimitedSlopeBeta= 1.     # Slope parameter for the "limited" slope by Toro
+charLimiting	= .true. # Characteristic limiting vs. Primitive limiting
+
+use_avisc	= .false. # use artificial viscosity (originally for PPM)
+#cvisc		= 0.1     # coefficient for artificial viscosity
+use_flattening	= .false. # use flattening (dissipative) (originally for PPM)
+use_steepening	= .false. # use contact steepening (originally for PPM)
+use_upwindTVD	= .false. # use upwind biased TVD slope for PPM (need nguard=6)
+
+#	II. RIEMANN SOLVERS:
+RiemannSolver	= "Roe"       # Roe, HLL, HLLC, LLF, Marquina
+entropy         = .false.     # Entropy fix for the Roe solver
+
+#	III. STRONG SHOCK HANDELING SCHEME:
+shockDetect	= .false.     # Shock Detect for numerical stability
+## -------------------------------------------------------------##
+
+## ---------------------------------------------------------------##
+##  SWITCHES SPECIFIC TO THE SUPER-TIME-STEPPING (STS) ALGORITHM  ##
+##  NOTE: For details on using STS runtime parameters, please     ##
+##        refer to user's guide (Driver chapter).                 ##
+useSTS                  = .false.
+nstepTotalSTS           = 5
+nuSTS                   = 0.2
+## ---------------------------------------------------------------##

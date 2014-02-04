@@ -1,0 +1,37 @@
+#!/bin/csh
+
+#
+# a shell script to run through a sod resolution study and print the
+# total pressure error.
+#
+# This assumes the files are in directories sodx, and the checkpoint file
+# you want to look at in each is called sod_2d_0deg_6lev_hdf_chk_0002.
+# If not, you have to change the following lines:
+#
+
+set files=(sod[0-9]*)
+set chkpt="sod_2d_0deg_6lev_hdf_chk_0002"
+
+#
+#
+
+echo "pro doconverge, levs, perror" > doconverge.pro
+echo "" >> doconverge.pro
+
+set nfiles=$#files
+
+echo "  levs   = findgen(${nfiles})" >> doconverge.pro
+echo "  perror = findgen(${nfiles})" >> doconverge.pro
+echo "  n = 0 " >> doconverge.pro
+echo ""         >> doconverge.pro
+
+foreach i ($files)
+	set lev=`echo $i | sed -e 's/sod//'`
+    echo "     levs[n] = ${lev}"                                >>doconverge.pro
+	echo "     soderror, '${i}/${chkpt}', pres, comppress, dp, p">>doconverge.pro
+    echo "     perror[n] = p"    >>doconverge.pro
+    echo "     n = n + 1 "       >>doconverge.pro
+    echo ""                      >> doconverge.pro
+end
+
+echo "end" >> doconverge.pro

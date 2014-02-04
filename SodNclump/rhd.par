@@ -1,0 +1,105 @@
+#	Runtime parameters for the relativistic shock-tube problem.
+
+#	Parameters for initial model
+
+#		Density, pressure, and velocity on either side of interface
+
+#               Relativistic shock tube parameters (cf. Hawley, Smarr, &
+#               Wilson 1984, ApJ, 277, 296) -- here converted to CGS units
+
+sim_rhoLeft	= 10.
+sim_rhoRight	= 1.
+sim_pLeft          = 1.1983402383158E22
+sim_pRight         = 5.9917011915788E14
+
+#               Nonrelativistic shock tube parameters (cf. Sod 1978, JCP, 27, 1)
+
+#sim_rhoLeft        = 1.
+#sim_rhoRight       = 0.125
+#sim_pLeft          = 1.
+#sim_pRight         = 0.1
+
+#               Start from rest in either case
+
+sim_uLeft		= 0.
+sim_uRight		= 0.
+
+#		Angle and position of interface relative to x and y axes
+
+sim_xangle		= 0.
+sim_yangle		= 90.
+sim_posn		= 0.5
+
+#		Gas ratio of specific heats
+
+gamma           = 1.6666666666667
+
+#	Computational volume parameters
+
+#		Grid dimensionality and geometry
+
+geometry = "cartesian"
+
+#		Size of computational volume
+
+xmin		= 0.
+xmax		= 1.
+ymin		= 0.
+ymax		= 1.
+zmin		= 0.
+zmax		= 1.
+Nblockx         = 2
+Nblocky         = 1
+Nblockz         = 1
+
+#		Boundary conditions
+
+xl_boundary_type = "outflow"
+xr_boundary_type = "outflow"
+yl_boundary_type = "outflow"
+yr_boundary_type = "outflow"
+zl_boundary_type = "outflow"
+zr_boundary_type = "outflow"
+
+#	Simulation (grid, time, I/O) parameters
+
+cfl		= 0.8
+basenm          = "relst_"
+restart         = .false.
+nrstrt          = 10000
+nend            = 10000
+tplot           = 1.E99
+
+#       Time & small value information for relativistic case
+
+trstrt          = 1.2508653569931E-12
+tmax            = 1.2508653569931E-11
+dtini           = 3.3356409519815E-16
+dtmin           = 1.E-20
+smallp          = 8.9875519e10
+smalle          = 898.75522
+
+#       Time & small value information for nonrelativistic case
+
+#tmax            = 0.2
+#trstrt          = 0.02
+#dtini           = 1.0E-6
+#smallp          = 1.0E-2
+#smalle          = 1.0E-2
+
+run_comment     = "Relativistic shock tube problem"
+log_file        = "relst.log"
+
+eintSwitch     = -1.   # don't EVER use total - kinetic to compute internal
+                        # energy for this hydro solver
+convertToConsvdInMeshInterp   = .true.
+monotone        = .true.
+
+nriem      = 19
+rieman_tol = 1.E-6
+# no longer used in flash3
+#tstep_change_factor = 2.
+#   AMR refinement parameters
+
+lrefine_max     = 6
+refine_var_1    = "dens"

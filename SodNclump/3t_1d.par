@@ -1,0 +1,144 @@
+run_comment = "Sod problem, diagonal direction"
+basenm      = "sod_"
+log_file    = "sod.log"
+restart     = .false.
+
+checkpointFileIntervalTime = 1.0
+checkpointFileIntervalStep = 10
+checkpointFileNumber = 0
+
+plotfileIntervalTime = 0.
+plotfileIntervalStep = 0
+plotfileNumber = 0
+
+plot_var_1 = "dens"
+plot_var_2 = "pres"
+plot_var_3 = "temp"
+
+##############################
+#                            #
+#     INITIAL CONDITIONS     #
+#                            #
+##############################
+
+# Specify density, velocity, and electron/ion/radiation pressure on
+# the left/right side of the interface
+
+sim_rhoLeft   = 0.054
+sim_rhoRight  = 0.0018
+sim_uLeft     = 0.
+sim_uRight    = 0.
+
+# Set left/right pressure for 10 eV temperature for fully ionized
+# Helium:
+sim_peleLeft  = 260510411834.0
+sim_pionLeft  = 130255205917.0
+sim_peleRight = 8683680394.48
+sim_pionRight = 4341840197.24
+
+# Set radiation energy to be really low:
+sim_pradLeft  = 1.0e-08
+sim_pradRight = 1.0e-08
+
+
+################
+#              #
+#     TIME     #
+#              #
+################
+tstep_change_factor = 1.10
+
+cfl    = 0.8
+dtinit = 1.0e-15
+dtmin  = 1.0e-16
+tmax   = 70.0e-09
+nend   = 10000000
+
+################
+#              #
+#     MESH     #
+#              #
+################
+geometry = cartesian
+
+# DOMAIN SIZE:
+xmin = 0.
+xmax = 1.
+ymin = 0.
+ymax = 1.
+
+# PARAMESH:
+lrefine_max  = 6
+refine_var_1 = "dens"
+
+# NOFBS:
+iGridSize = 8
+jGridSize = 8
+kGridSize = 1
+iProcs = 1      #number or procs in the i direction     
+jProcs = 1
+kProcs = 1
+
+
+###############
+#             #
+#     EOS     #
+#             #
+############### 
+eosMode = "dens_ie_recal_gather"
+eosModeInit = "dens_ie_gather"
+
+# Set ratio of specific heats:
+gamma = 1.6666666666666667
+
+# Set material properties:
+eos_singleSpeciesA = 4.0
+eos_singleSpeciesZ = 2.0
+
+
+#################
+#               #
+#     HYDRO     #
+#               #
+#################
+eintSwitch     = 1.e-4
+
+## -------------------------------------------------------------##
+##  SWITCHES SPECIFIC TO THE UNSPLIT HYDRO SOLVER               ##
+#       I. INTERPOLATION SCHEME:
+order           = 2      # Interpolation order (first/second/third/fifth order)
+slopeLimiter    = "mc"   # Slope limiters (minmod, mc, vanLeer, hybrid, limited)
+LimitedSlopeBeta= 1.     # Slope parameter for the "limited" slope by Toro
+charLimiting    = .true. # Characteristic limiting vs. Primitive limiting
+
+use_avisc       = .false. # use artificial viscosity (originally for PPM)
+#cvisc          = 0.1     # coefficient for artificial viscosity
+use_flattening  = .false. # use flattening (dissipative) (originally for PPM)
+use_steepening  = .false. # use contact steepening (originally for PPM)
+use_upwindTVD   = .false. # use upwind biased TVD slope for PPM (need nguard=6)
+
+#       II. RIEMANN SOLVERS:
+RiemannSolver   = "Roe"       # Roe, HLL, HLLC, LLF, Marquina
+entropy         = .false.     # Entropy fix for the Roe solver
+
+#       III. STRONG SHOCK HANDELING SCHEME:
+shockDetect     = .false.     # Shock Detect for numerical stability
+## -------------------------------------------------------------##
+
+## ---------------------------------------------------------------##
+##  SWITCHES SPECIFIC TO THE SUPER-TIME-STEPPING (STS) ALGORITHM  ##
+##  NOTE: For details on using STS runtime parameters, please     ##
+##        refer to user's guide (Driver chapter).                 ##
+useSTS                  = .false.
+nstepTotalSTS           = 5
+nuSTS                   = 0.2
+## ---------------------------------------------------------------##
+
+# SET BOUNDARY CONDITIONS:
+xl_boundary_type = "outflow"
+xr_boundary_type = "outflow"
+yl_boundary_type = "outflow"
+yr_boundary_type = "outflow"
+
+# SET EOS MODE TO USE AFTER HYDRO:
+hy_eosModeAfter = "dens_ie_sele_gather"
