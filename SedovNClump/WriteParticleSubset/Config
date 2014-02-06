@@ -1,0 +1,43 @@
+#       Configuration file for the Sedov explosion problem
+#       (Sedov, L. I., 1959, Similarity and Dimensional Methods
+#       in Mechanics [New York:  Academic])
+
+REQUIRES Driver
+REQUIRES physics/Hydro
+REQUIRES physics/Eos
+
+PARTICLETYPE passive INITMETHOD lattice MAPMETHOD quadratic ADVMETHOD rungekutta
+REQUIRES Particles/ParticlesMain
+REQUESTS Particles/ParticlesInitialization/Lattice
+REQUESTS Particles/ParticlesMapping/Quadratic
+REQUESTS IO/IOMain/
+REQUESTS IO/IOParticles
+
+
+
+D sim_pAmbient       Initial ambient pressure
+PARAMETER sim_pAmbient     REAL    1.E-5
+
+D sim_rhoAmbient     Initial ambient density
+PARAMETER sim_rhoAmbient   REAL    1.
+
+D sim_expEnergy      Explosion energy (distributed over 2^dimen central zones)
+PARAMETER sim_expEnergy    REAL    1.
+
+D sim_rInit          Radial position of inner edge of grid (for 1D)
+PARAMETER sim_rInit        REAL    0.05
+
+D sim_xctr            Explosion center coordinates
+PARAMETER sim_xctr          REAL    0.5
+
+D sim_yctr            Explosion center coordinates
+PARAMETER sim_yctr          REAL    0.5
+
+D sim_zctr            Explosion center coordinates
+PARAMETER sim_zctr          REAL    0.5
+
+D sim_nsubzones       Number of `sub-zones' in cells for applying 1d profile
+PARAMETER sim_nsubzones     INTEGER 7
+
+
+# No VARIABLE declarations here, using VARIABLES declared in Hydro etc.
