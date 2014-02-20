@@ -66,6 +66,15 @@ subroutine Simulation_init()
   call RuntimeParameters_get('zmax',sim_zMax)
   call RuntimeParameters_get('tinitial',sim_tInitial)
 
+
+#HDWIII Add 2014_02_10 Items for the clumps.
+
+  call RuntimeParameters_get('sim_cposx', sim_cposx)
+  call RuntimeParameters_get('sim_cposy', sim_cposy)
+  call RuntimeParameters_get('sim_crad', sim_crad)
+  call RuntimeParameters_get('sim_crho', sim_crho)
+  call RuntimeParameters_get('sim_cp', sim_cp)
+
   sim_iFuel = 1
   
   if (sim_nSubZones .le. 1) sim_nSubZones = 2

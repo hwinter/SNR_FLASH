@@ -1,4 +1,4 @@
-!!****if* source/Simulation/SimulationMain/Sedov/Simulation_initBlock
+od!!****if* source/Simulation/SimulationMain/Sedov/Simulation_initBlock
 !!
 !! NAME
 !!
@@ -38,11 +38,112 @@
 !!  sim_yctr           Explosion center coordinates
 !!  sim_zctr           Explosion center coordinates
 !!  sim_nsubzones      Number of `sub-zones' in cells for applying 1d profile
+!! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!  Variables for the Clumps/Cloudlets
+!!  sim_cposx   Position of the clump in X
+!!  sim_cposy   Position of the clump in Y
+!!  sim_crad     Radius of the clump
+!!  sim_crho     Density of the clump
+!!  sim_cp         Pressure of the clump
 !!
 !!
 !!***
 
 !!REORDER(4): solnData
+
+!!*********************************************************************
+subroutine read_clouds(N,x_pos, y_pos, z_pos, cloud_rad)
+    implicit none
+
+    integer :: N, iii
+    real :: x_pos(N), y_pos(N), z_pos(N), cloud_rad(N)
+    
+    open (unit = 2, file = "clouds.txt")
+    
+    read(2,*) N
+
+    
+    print *,N
+    
+    
+    DO iii=1, N
+       PRINT *, iii
+       read(2,*) x_pos(iii), y_pos(iii), z_pos(iii), cloud_rad(iii)
+       
+    ENDDO
+    
+    
+    close(2)
+    
+    DO iii=1, N
+       PRINT *, x_pos(iii), y_pos(iii), z_pos(iii), cloud_rad(iii)
+    ENDDO
+    return
+  end subroutine read_clouds
+
+!!*********************************************************************
+integer function get_number_of_clouds()
+  INTEGER*4 :: getcwd, status
+  character*64:: dirname
+  real, allocatable :: x_pos(:), y_pos(:), z_pos(:), cloud_rad(:)
+  logical :: file_exists
+  
+
+   status = getcwd( dirname )
+   if ( status .ne. 0 ) stop 'getcwd: error'
+   PRINT *, dirname
+
+  INQUIRE(FILE="/pool/cluster3/hwinter/programs/Flashcode/FLASH4/object/clouds.txt", &
+  										     EXIST=file_exists)								     
+
+  if (file_exists) then
+     print *,"File Exists", &
+     	   "/pool/cluster3/hwinter/programs/Flashcode/FLASH4/object/clouds.txt"
+     else
+	call system("pwd")
+	call system("ls clouds.txt")
+	call system("echo $USER")
+     endif
+
+ INQUIRE(FILE="clouds.txt", &
+  										     EXIST=file_exists)								     
+
+  if (file_exists) then
+     print *,"File Exists", "clouds.txt"
+     else
+	call system("pwd")
+	call system("ls clouds.txt")
+	call system("echo $USER")
+     endif
+
+  open (unit = 1, file = "/pool/cluster3/hwinter/programs/Flashcode/FLASH4/object/clouds.txt")
+  
+  read(1,*) get_number_of_clouds
+  close(1)
+  return
+end function get_number_of_clouds
+
+!!*********************************************************************
+integer function test_current_position(x,y,z,N, x_pos, y_pos, z_pos, cloud_rad)
+   integer :: iii,N
+   real ::x,y,z,x_pos(N), y_pos(N), z_pos(N), cloud_rad(N), distance
+   test_current_position=0
+   
+   do iii=1, N
+      distance=sqrt(((x-x_pos(iii))**2) + ((y-y_pos(iii))**2)  )
+      print *, distance, x, x_pos(iii), y, y_pos(iii), cloud_rad(iii)
+      if (distance <= cloud_rad(iii)) then 
+         test_current_position=1
+         print *, 'PING'
+      endif
+   end do
+
+   return
+
+end function test_current_position
+
+
+!!*********************************************************************
 
 
 subroutine Simulation_initBlock(blockId)
@@ -51,6 +152,7 @@ subroutine Simulation_initBlock(blockId)
      &  sim_nProfile, sim_drProf, sim_rProf, sim_vProf, sim_pProf, sim_pExp, sim_rhoProf, &
      &  sim_tInitial, sim_gamma, sim_expEnergy, sim_pAmbient, sim_rhoAmbient, &
      &  sim_smallX, sim_smallRho, sim_smallP, sim_rInit, &
+     &  sim_cposx, sim_cposy, sim_crad, sim_crho, sim_cp
      &  sim_nSubZones, sim_xCenter, sim_yCenter, sim_zCenter, sim_inSubzm1, sim_inszd
   use Grid_interface, ONLY : Grid_getBlkIndexLimits, Grid_getBlkPtr, Grid_releaseBlkPtr,&
     Grid_getCellCoords, Grid_putPointData
@@ -81,7 +183,35 @@ subroutine Simulation_initBlock(blockId)
   real, dimension(:,:,:,:),pointer :: solnData
 
   logical :: gcell = .true.
+!!*********************************************************************
+!! Variables for clouds
 
+  real :: new_rho,new_p, distance
+!! Variables needed to read the cloud data and perform the test.
+
+  integer :: NN, get_number_of_clouds, test_current_position, test
+
+  real, allocatable ::  x_pos(:), y_pos(:), z_pos(:), cloud_rad(:)
+  
+
+
+
+!!*********************************************************************
+
+
+!!*********************************************************************
+!!read the file containing the cloud positions to get the number of clouds.
+  NN=get_number_of_clouds()  
+!!Allocate the position and radius variables
+  allocate(x_pos(NN))
+  allocate(y_pos(NN))
+  allocate(z_pos(NN))
+  allocate(cloud_rad(NN))	     	    
+!!Read in the file and fill in the values
+call read_clouds(NN, x_pos, y_pos, z_pos, cloud_rad)
+
+!!*********************************************************************
+  
   !
   !  Construct the radial samples needed for the initialization.
   !
@@ -286,6 +416,24 @@ subroutine Simulation_initBlock(blockId)
               enddo
            end if
 
+
+!!*********************************************************************
+!! Add Clouds
+  
+	   test=test_current_position(xx,yy,0.0,NN, x_pos, y_pos, z_pos, cloud_rad)
+	   
+           if (test == 1) then 	  
+		  new_rho=sim_crho
+		  new_p=sim_cp
+           else
+	          new_rho=0.
+		  new_p=0.		
+           endif 
+
+           rho=rho+new_rho
+           p=p+new_p
+
+!!*********************************************************************
 
            call Grid_putPointData(blockId, CENTER, DENS_VAR, EXTERIOR, axis, rho)
            call Grid_putPointData(blockId, CENTER, PRES_VAR, EXTERIOR, axis, p)

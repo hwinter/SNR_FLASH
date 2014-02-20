@@ -30,6 +30,8 @@ module Simulation_data
 
   implicit none
 #include "constants.h"
+#HDWIII Add 2014_02_10
+#include "Flash.h" 
 
   !! *** Runtime Parameters *** !!
 
@@ -40,6 +42,8 @@ module Simulation_data
   integer, save :: sim_nSubZones
   integer, save :: sim_iFuel
   real, save    :: sim_tInitial
+#HDWIII Add 2014_02_10
+  real, save :: sim_cposx, sim_cposy, sim_crad, sim_crho, sim_cp
 
   !! *** Variables pertaining to this Simulation *** !!
 
