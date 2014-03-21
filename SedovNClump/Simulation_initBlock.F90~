@@ -420,7 +420,7 @@ call read_clouds(NN, x_pos, y_pos, z_pos, cloud_rad)
 !!*********************************************************************
 !! Add Clouds
   
-	   test=test_current_position(xx,yy,zz,NN, x_pos, y_pos, z_pos, cloud_rad)
+	   test=test_current_position(xx,yy,0.0,NN, x_pos, y_pos, z_pos, cloud_rad)
 	   
            if (test == 1) then 	  
 		  new_rho=sim_crho
