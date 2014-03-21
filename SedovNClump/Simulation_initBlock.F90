@@ -1,4 +1,4 @@
-od!!****if* source/Simulation/SimulationMain/Sedov/Simulation_initBlock
+!!****if* source/Simulation/SimulationMain/Sedov/Simulation_initBlock
 !!
 !! NAME
 !!
@@ -40,9 +40,6 @@ od!!****if* source/Simulation/SimulationMain/Sedov/Simulation_initBlock
 !!  sim_nsubzones      Number of `sub-zones' in cells for applying 1d profile
 !! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!  Variables for the Clumps/Cloudlets
-!!  sim_cposx   Position of the clump in X
-!!  sim_cposy   Position of the clump in Y
-!!  sim_crad     Radius of the clump
 !!  sim_crho     Density of the clump
 !!  sim_cp         Pressure of the clump
 !!
@@ -152,7 +149,7 @@ subroutine Simulation_initBlock(blockId)
      &  sim_nProfile, sim_drProf, sim_rProf, sim_vProf, sim_pProf, sim_pExp, sim_rhoProf, &
      &  sim_tInitial, sim_gamma, sim_expEnergy, sim_pAmbient, sim_rhoAmbient, &
      &  sim_smallX, sim_smallRho, sim_smallP, sim_rInit, &
-     &  sim_cposx, sim_cposy, sim_crad, sim_crho, sim_cp
+     &  sim_crho, sim_cp, &
      &  sim_nSubZones, sim_xCenter, sim_yCenter, sim_zCenter, sim_inSubzm1, sim_inszd
   use Grid_interface, ONLY : Grid_getBlkIndexLimits, Grid_getBlkPtr, Grid_releaseBlkPtr,&
     Grid_getCellCoords, Grid_putPointData
