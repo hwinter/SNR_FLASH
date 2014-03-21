@@ -67,7 +67,7 @@ subroutine Simulation_init()
   call RuntimeParameters_get('tinitial',sim_tInitial)
 
 
-!! HDWIII Add 2014_02_10 Items for the clumps.
+#HDWIII Add 2014_02_10 Items for the clumps.
 
   call RuntimeParameters_get('sim_cposx', sim_cposx)
   call RuntimeParameters_get('sim_cposy', sim_cposy)
