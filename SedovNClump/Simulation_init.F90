@@ -69,11 +69,11 @@ subroutine Simulation_init()
 
 !! HDWIII Add 2014_02_10 Items for the clumps.
 
-  call RuntimeParameters_get('sim_cposx', sim_cposx)
-  call RuntimeParameters_get('sim_cposy', sim_cposy)
-  call RuntimeParameters_get('sim_crad', sim_crad)
-  call RuntimeParameters_get('sim_crho', sim_crho)
-  call RuntimeParameters_get('sim_cp', sim_cp)
+!!  call RuntimeParameters_get('sim_cposx', sim_cposx)
+!!  call RuntimeParameters_get('sim_cposy', sim_cposy)
+!!  call RuntimeParameters_get('sim_crad', sim_crad)
+!!  call RuntimeParameters_get('sim_crho', sim_crho)
+!!  call RuntimeParameters_get('sim_cp', sim_cp)
 
   sim_iFuel = 1
   

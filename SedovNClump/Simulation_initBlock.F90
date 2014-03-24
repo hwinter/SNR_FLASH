@@ -49,11 +49,11 @@
 !!REORDER(4): solnData
 
 !!*********************************************************************
-subroutine read_clouds(N,x_pos, y_pos, z_pos, cloud_rad)
+subroutine read_clouds(N, x_pos, y_pos, z_pos, cloud_rad,cloud_rho,cloud_p )
     implicit none
 
     integer :: N, iii
-    real :: x_pos(N), y_pos(N), z_pos(N), cloud_rad(N)
+    real :: x_pos(N), y_pos(N), z_pos(N), cloud_rad(N), cloud_rho(N), cloud_p(N)
     
     open (unit = 2, file = "clouds.txt")
     
@@ -65,7 +65,7 @@ subroutine read_clouds(N,x_pos, y_pos, z_pos, cloud_rad)
     
     DO iii=1, N
        PRINT *, iii
-       read(2,*) x_pos(iii), y_pos(iii), z_pos(iii), cloud_rad(iii)
+       read(2,*) x_pos(iii), y_pos(iii), z_pos(iii), cloud_rad(iii), cloud_rho(iii), cloud_p(iii)
        
     ENDDO
     
@@ -73,7 +73,7 @@ subroutine read_clouds(N,x_pos, y_pos, z_pos, cloud_rad)
     close(2)
     
     DO iii=1, N
-       PRINT *, x_pos(iii), y_pos(iii), z_pos(iii), cloud_rad(iii)
+       PRINT *, x_pos(iii), y_pos(iii), z_pos(iii), cloud_rad(iii), cloud_rho(iii), cloud_p(iii)
     ENDDO
     return
   end subroutine read_clouds
@@ -82,7 +82,7 @@ subroutine read_clouds(N,x_pos, y_pos, z_pos, cloud_rad)
 integer function get_number_of_clouds()
   INTEGER*4 :: getcwd, status
   character*64:: dirname
-  real, allocatable :: x_pos(:), y_pos(:), z_pos(:), cloud_rad(:)
+  real, allocatable :: x_pos(:), y_pos(:), z_pos(:), cloud_rad(:), cloud_rho(:), cloud_p(:)
   logical :: file_exists
   
 
@@ -121,14 +121,15 @@ integer function get_number_of_clouds()
 end function get_number_of_clouds
 
 !!*********************************************************************
-integer function test_current_position(x,y,z,N, x_pos, y_pos, z_pos, cloud_rad)
+integer function test_current_position(x,y,z,N, x_pos, y_pos, z_pos, cloud_rad, cloud_rho, cloud_p)
    integer :: iii,N
-   real ::x,y,z,x_pos(N), y_pos(N), z_pos(N), cloud_rad(N), distance
+   real ::x,y,z,x_pos(N), y_pos(N), z_pos(N), cloud_rad(N), cloud_rho(N), cloud_p(N), distance
    test_current_position=0
    
    do iii=1, N
       distance=sqrt(((x-x_pos(iii))**2) + ((y-y_pos(iii))**2)  )
-      print *, distance, x, x_pos(iii), y, y_pos(iii), cloud_rad(iii)
+      print *, distance, x, x_pos(iii), y, y_pos(iii), cloud_rad(iii), cloud_rho(iii), cloud_p(iii)
+
       if (distance <= cloud_rad(iii)) then 
          test_current_position=1
          print *, 'PING'
@@ -188,7 +189,7 @@ subroutine Simulation_initBlock(blockId)
 
   integer :: NN, get_number_of_clouds, test_current_position, test
 
-  real, allocatable ::  x_pos(:), y_pos(:), z_pos(:), cloud_rad(:)
+  real, allocatable ::  x_pos(:), y_pos(:), z_pos(:), cloud_rad(:), cloud_rho(:),cloud_p(:) 
   
 
 
@@ -203,9 +204,12 @@ subroutine Simulation_initBlock(blockId)
   allocate(x_pos(NN))
   allocate(y_pos(NN))
   allocate(z_pos(NN))
-  allocate(cloud_rad(NN))	     	    
+  allocate(cloud_rad(NN))
+  allocate(cloud_rho(NN))
+  allocate(cloud_p(NN))
+
 !!Read in the file and fill in the values
-call read_clouds(NN, x_pos, y_pos, z_pos, cloud_rad)
+  call read_clouds(NN, x_pos, y_pos, z_pos, cloud_rad, cloud_rho, cloud_p)
 
 !!*********************************************************************
   
@@ -417,7 +421,7 @@ call read_clouds(NN, x_pos, y_pos, z_pos, cloud_rad)
 !!*********************************************************************
 !! Add Clouds
   
-	   test=test_current_position(xx,yy,zz,NN, x_pos, y_pos, z_pos, cloud_rad)
+	   test=test_current_position(xx,yy,zz,NN, x_pos, y_pos, z_pos, cloud_rad,)
 	   
            if (test == 1) then 	  
 		  new_rho=sim_crho
