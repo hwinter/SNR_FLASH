@@ -75,8 +75,8 @@ plotfileIntervalTime = 0.
 plotfileIntervalStep = 5
 plotfileNumber = 0
 
-nend            = 1000000
-tmax            = 5.0
+nend            = 10000000
+tmax            = 50.0
 
 run_comment     = "Sedov explosion"
 log_file        = "sedov.log"
