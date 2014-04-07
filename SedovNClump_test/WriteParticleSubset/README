@@ -1,0 +1,13 @@
+This is the standard Sedov test with particles, but is
+designed to test writing a particle subset.
+
+Two subsets of the particles array are written.
+
+1. The tags for every single particle.
+   Dataset: "Tags_of_all_particles"
+2. The full properties of all particles that are at x position > 0.5.
+   Dataset: "Posx_greater_than_0.5"
+
+
+Setup line:
+./setup Sedov/WriteParticleSubset -auto +parallelIO
