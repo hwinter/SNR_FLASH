@@ -1,3 +1,4 @@
+#################################################################
 #	Runtime parameters for the Sedov explosion problem.
 
 #	Parameters for initial model
@@ -7,20 +8,12 @@
 
 sim_pAmbient	= 1.E-5
 sim_rhoAmbient	= 1.
-sim_expEnergy	= 1.
-sim_rInit		= 0.013671875
-sim_xctr		= 0.0
-sim_yctr		= 0.0
-sim_zctr		= 0.0
+sim_expEnergy	= 1.E+51 #Ergs
+sim_rInit		= 0.003E+18 #cm
+sim_xctr		= 0.0 #cm
+sim_yctr		= 0.0 #cm
+sim_zctr		= 0.0 #cm
 
-
-#################################################################
-#  Clump parameters rho and pressure are added to background values.
-# sim_cposx=  2.5
-# sim_cposy=  2.5
-# sim_crad=    0.5
-# sim_crho=    2
-# sim_cp=        0.0
 #################################################################
 
 #		Gas ratio of specific heats
@@ -29,16 +22,16 @@ gamma           = 1.4
 
 #	Computational volume parameters
 
-#		Grid dimensionality and geometry
+#Grid dimensionality and geometry
 
 geometry = "cartesian"
-
-#		Size of computational volume
+#################################################################
+#Size of computational volume
 
 xmin		= 0.
-xmax		= 10.
+xmax		= 1.52E+20 #cm
 ymin		= 0.
-ymax		= 10.
+ymax		= 1.52E+20 #cm
 zmin		= 0.
 zmax		= 1.
 
@@ -75,8 +68,8 @@ plotfileIntervalTime = 0.
 plotfileIntervalStep = 5
 plotfileNumber = 0
 
-nend            = 10000000
-tmax            = 50.0
+nend            = 100000000000000000000000000000
+tmax            = 3.2E+11 # Seconds ~30,000 years
 
 run_comment     = "Sedov explosion"
 log_file        = "sedov.log"
