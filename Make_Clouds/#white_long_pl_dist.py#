@@ -26,7 +26,7 @@ zrange=np.array([0,50])
 min_size_cloud=0.01
 max_size_cloud=1.0
 #Cloud density in g/cc
-rho=1.67E-24
+rho=10
 ###########################################################
 parsec2cm=3.09E+18
 xrange=xrange*parsec2cm
@@ -141,7 +141,7 @@ for ind in range(0, n_clouds):
     y_pos=np.append(y_pos, y)
     z_pos=np.append(z_pos, z)
     cloud_rad=np.append(cloud_rad, r)
-    cloud_rho=np.append(cloud_rho, rho)
+    cloud_rho=np.appen d(cloud_rho, rho)
         
     #Write data out to a text file
     out_file.write(str(x_pos[ind]))

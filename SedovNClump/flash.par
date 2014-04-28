@@ -7,7 +7,7 @@
 #		radius of perturbation, and location of explosion center
 
 sim_pAmbient	= 1.E-5
-sim_rhoAmbient	= 1.
+sim_rhoAmbient	= 1.67E-24 #One Hydrogen Particle per cc.
 sim_expEnergy	= 1.E+51 #Ergs
 sim_rInit		= 0.003E+18 #cm
 sim_xctr		= 0.0 #cm
@@ -48,7 +48,7 @@ zl_boundary_type = "outflow"
 zr_boundary_type = "outflow"
 
 
-
+   
 
 
 #	Simulation time, I/O  parameters
@@ -68,7 +68,7 @@ plotfileIntervalTime = 0.
 plotfileIntervalStep = 5
 plotfileNumber = 0
 
-nend            = 100000000000000000000000000000
+#nend            = 
 tmax            = 3.2E+11 # Seconds ~30,000 years
 
 run_comment     = "Sedov explosion"

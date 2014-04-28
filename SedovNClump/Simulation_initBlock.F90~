@@ -49,32 +49,32 @@
 !!REORDER(4): solnData
 
 !!*********************************************************************
-subroutine read_clouds(N, x_pos, y_pos, z_pos, cloud_rad,cloud_rho,cloud_p )
+subroutine read_clouds(N, x_pos, y_pos, z_pos, cloud_rad,cloud_rho)
     implicit none
 
     integer :: N, iii
-    real :: x_pos(N), y_pos(N), z_pos(N), cloud_rad(N), cloud_rho(N), cloud_p(N)
+    real :: x_pos(N), y_pos(N), z_pos(N), cloud_rad(N), cloud_rho(N)
     
     open (unit = 2, file = "clouds.txt")
     
     read(2,*) N
 
     
-    print *,N
+    !! print *,N
     
     
     DO iii=1, N
-       PRINT *, iii
-       read(2,*) x_pos(iii), y_pos(iii), z_pos(iii), cloud_rad(iii), cloud_rho(iii), cloud_p(iii)
+       !! PRINT *, iii
+       read(2,*) x_pos(iii), y_pos(iii), z_pos(iii), cloud_rad(iii), cloud_rho(iii)
        
     ENDDO
     
     
     close(2)
     
-    DO iii=1, N
-       PRINT *, x_pos(iii), y_pos(iii), z_pos(iii), cloud_rad(iii), cloud_rho(iii), cloud_p(iii)
-    ENDDO
+    !! DO iii=1, N
+       !! PRINT *, x_pos(iii), y_pos(iii), z_pos(iii), cloud_rad(iii), cloud_rho(iii)
+    !! ENDDO
     return
   end subroutine read_clouds
 
@@ -82,7 +82,7 @@ subroutine read_clouds(N, x_pos, y_pos, z_pos, cloud_rad,cloud_rho,cloud_p )
 integer function get_number_of_clouds()
   INTEGER*4 :: getcwd, status
   character*64:: dirname
-  real, allocatable :: x_pos(:), y_pos(:), z_pos(:), cloud_rad(:), cloud_rho(:), cloud_p(:)
+  real, allocatable :: x_pos(:), y_pos(:), z_pos(:), cloud_rad(:), cloud_rho(:)
   logical :: file_exists
   
 
@@ -98,7 +98,7 @@ integer function get_number_of_clouds()
      	   "/pool/cluster3/hwinter/programs/Flashcode/FLASH4/object/clouds.txt"
      else
 	call system("pwd")
-	call system("ls clouds.txt")
+	call system("ls /pool/cluster3/hwinter/programs/Flashcode/FLASH4/object/clouds.txt")
 	call system("echo $USER")
      endif
 
@@ -120,22 +120,29 @@ integer function get_number_of_clouds()
   return
 end function get_number_of_clouds
 
-!!*********************************************************************
-integer function test_current_position(x,y,z,N, x_pos, y_pos, z_pos, cloud_rad, cloud_rho, cloud_p)
+!!**
+!! The function below will return 0 if there is no overlap or the additional density of the region
+!!  if there is a cloud at the current coordinates.
+!! *******************************************************************
+
+real function test_current_position(x,y,z,N, x_pos, y_pos, z_pos, cloud_rad, cloud_rho)
    integer :: iii,N
-   real ::x,y,z,x_pos(N), y_pos(N), z_pos(N), cloud_rad(N), cloud_rho(N), cloud_p(N), distance
-   test_current_position=0
+   real ::x,y,z,x_pos(N), y_pos(N), z_pos(N), cloud_rad(N), cloud_rho(N), distance
+
+   test_current_position=0.0
+   !print*,'z',z	
    
    do iii=1, N
-      distance=sqrt(((x-x_pos(iii))**2) + ((y-y_pos(iii))**2)  )
-      print *, distance, x, x_pos(iii), y, y_pos(iii), cloud_rad(iii), cloud_rho(iii), cloud_p(iii)
+      distance=sqrt(((x-x_pos(iii))**2) + ((y-y_pos(iii))**2) + ((z-z_pos(iii))**2) )
+      !! print *, distance, x, x_pos(iii), y, y_pos(iii), cloud_rad(iii), cloud_rho(iii)
 
       if (distance <= cloud_rad(iii)) then 
-         test_current_position=1
+         test_current_position=cloud_rho(iii)
          print *, 'PING'
       endif
    end do
 
+   print *, 'test_current_position', test_current_position	
    return
 
 end function test_current_position
@@ -150,7 +157,6 @@ subroutine Simulation_initBlock(blockId)
      &  sim_nProfile, sim_drProf, sim_rProf, sim_vProf, sim_pProf, sim_pExp, sim_rhoProf, &
      &  sim_tInitial, sim_gamma, sim_expEnergy, sim_pAmbient, sim_rhoAmbient, &
      &  sim_smallX, sim_smallRho, sim_smallP, sim_rInit, &
-     &  sim_crho, sim_cp, &
      &  sim_nSubZones, sim_xCenter, sim_yCenter, sim_zCenter, sim_inSubzm1, sim_inszd
   use Grid_interface, ONLY : Grid_getBlkIndexLimits, Grid_getBlkPtr, Grid_releaseBlkPtr,&
     Grid_getCellCoords, Grid_putPointData
@@ -184,12 +190,12 @@ subroutine Simulation_initBlock(blockId)
 !!*********************************************************************
 !! Variables for clouds
 
-  real :: new_rho,new_p, distance
+  real :: new_rho,rho_out, distance, test_current_position
 !! Variables needed to read the cloud data and perform the test.
 
-  integer :: NN, get_number_of_clouds, test_current_position, test
+  integer :: NN, get_number_of_clouds, test
 
-  real, allocatable ::  x_pos(:), y_pos(:), z_pos(:), cloud_rad(:), cloud_rho(:),cloud_p(:) 
+  real, allocatable ::  x_pos(:), y_pos(:), z_pos(:), cloud_rad(:), cloud_rho(:) 
   
 
 
@@ -200,16 +206,15 @@ subroutine Simulation_initBlock(blockId)
 !!*********************************************************************
 !!read the file containing the cloud positions to get the number of clouds.
   NN=get_number_of_clouds()  
-!!Allocate the position and radius variables
+!!Allocate the position and radius variables.
   allocate(x_pos(NN))
   allocate(y_pos(NN))
   allocate(z_pos(NN))
   allocate(cloud_rad(NN))
   allocate(cloud_rho(NN))
-  allocate(cloud_p(NN))
 
-!!Read in the file and fill in the values
-  call read_clouds(NN, x_pos, y_pos, z_pos, cloud_rad, cloud_rho, cloud_p)
+!!Read in the file and fill in the values.
+  call read_clouds(NN, x_pos, y_pos, z_pos, cloud_rad, cloud_rho)
 
 !!*********************************************************************
   
@@ -371,6 +376,22 @@ subroutine Simulation_initBlock(blockId)
            enddo
            
            rho = max(sumRho * sim_inszd, sim_smallRho)
+
+
+      	   print *, 'rho in', rho
+!!*********************************************************************
+!! Add Clouds
+!! The function below will return 0 if there is no overlap or the additional density of the region
+!!  if there is a cloud at the current coordinates. 
+ 
+	   rho_out=test_current_position(xx,yy,zz,NN, x_pos, y_pos, z_pos, cloud_rad, cloud_rho)
+	   print *, 'rho_out', rho_out
+          
+	   rho=rho+rho_out
+          
+
+      	   print *, 'new rho', rho
+!!*********************************************************************
            p   = max(sumP   * sim_inszd, sim_smallP)
            vx  = sumVX  * sim_inszd
            vy  = sumVY  * sim_inszd
@@ -418,23 +439,6 @@ subroutine Simulation_initBlock(blockId)
            end if
 
 
-!!*********************************************************************
-!! Add Clouds
-  
-	   test=test_current_position(xx,yy,zz,NN, x_pos, y_pos, z_pos, cloud_rad,)
-	   
-           if (test == 1) then 	  
-		  new_rho=sim_crho
-		  new_p=sim_cp
-           else
-	          new_rho=0.
-		  new_p=0.		
-           endif 
-
-           rho=rho+new_rho
-           p=p+new_p
-
-!!*********************************************************************
 
            call Grid_putPointData(blockId, CENTER, DENS_VAR, EXTERIOR, axis, rho)
            call Grid_putPointData(blockId, CENTER, PRES_VAR, EXTERIOR, axis, p)
