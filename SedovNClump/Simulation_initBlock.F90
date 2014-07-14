@@ -138,11 +138,11 @@ real function test_current_position(x,y,z,N, x_pos, y_pos, z_pos, cloud_rad, clo
 
       if (distance <= cloud_rad(iii)) then 
          test_current_position=cloud_rho(iii)
-         print *, 'PING'
+         !! print *, 'PING'
       endif
    end do
 
-   print *, 'test_current_position', test_current_position	
+   !! print *, 'test_current_position', test_current_position	
    return
 
 end function test_current_position
@@ -378,19 +378,19 @@ subroutine Simulation_initBlock(blockId)
            rho = max(sumRho * sim_inszd, sim_smallRho)
 
 
-      	   print *, 'rho in', rho
+      	   !! print *, 'rho in', rho
 !!*********************************************************************
 !! Add Clouds
 !! The function below will return 0 if there is no overlap or the additional density of the region
 !!  if there is a cloud at the current coordinates. 
  
 	   rho_out=test_current_position(xx,yy,zz,NN, x_pos, y_pos, z_pos, cloud_rad, cloud_rho)
-	   print *, 'rho_out', rho_out
+	   !! print *, 'rho_out', rho_out
           
 	   rho=rho+rho_out
           
 
-      	   print *, 'new rho', rho
+      	   !! print *, 'new rho', rho
 !!*********************************************************************
            p   = max(sumP   * sim_inszd, sim_smallP)
            vx  = sumVX  * sim_inszd

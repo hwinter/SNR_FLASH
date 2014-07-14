@@ -8,11 +8,11 @@
 
 sim_pAmbient	= 1.E-5
 sim_rhoAmbient	= 1.
-sim_expEnergy	= 1.E+51
-sim_rInit		= 0.013671875
-sim_xctr		= 0.0
-sim_yctr		= 0.0
-sim_zctr		= 0.0
+sim_expEnergy	= 1.E+51 #Ergs
+sim_rInit		= 0.003E+18 #cm
+sim_xctr		= 0.0 #cm
+sim_yctr		= 0.0 #cm
+sim_zctr		= 0.0 #cm
 
 #################################################################
 
@@ -29,9 +29,9 @@ geometry = "cartesian"
 #Size of computational volume
 
 xmin		= 0.
-xmax		= 1.52E+20
+xmax		= 1.52E+20 #cm
 ymin		= 0.
-ymax		= 1.52E+20
+ymax		= 1.52E+20 #cm
 zmin		= 0.
 zmax		= 1.
 
@@ -48,7 +48,7 @@ zl_boundary_type = "outflow"
 zr_boundary_type = "outflow"
 
 
-
+   
 
 
 #	Simulation time, I/O  parameters
@@ -68,8 +68,8 @@ plotfileIntervalTime = 0.
 plotfileIntervalStep = 5
 plotfileNumber = 0
 
-nend            = 100000000000000000000000000000
-tmax            = 3.2E+11
+#nend            = 
+tmax            = 3.2E+11 # Seconds ~30,000 years
 
 run_comment     = "Sedov explosion"
 log_file        = "sedov.log"
