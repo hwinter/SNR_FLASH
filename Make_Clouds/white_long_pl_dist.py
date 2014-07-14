@@ -10,7 +10,7 @@ import numpy as np
 ###########################################################
 #Input parameters
 #Define the number of "clouds".
-n_clouds=2,000
+n_clouds=1000
 #Index of the power law
 pl_index=3
 #Output file name
@@ -18,17 +18,17 @@ filename='clouds.txt'
 separator=','
 
 #Scale of the computational domain in pc.
-xrange=np.array([0,50])
-yrange=np.array([0,50])
-zrange=np.array([0,50])
+xrange=np.array([0,200])
+yrange=np.array([0,200])
+zrange=np.array([0,200])
 
 #Scale of the cloud size in pc.
-min_size_cloud=0.01
+min_size_cloud=0.001
 max_size_cloud=1.0
 #Cloud density in g/cc
 rho=10
 ###########################################################
-parsec2cm=3.09E+18
+parsec2cm=1#3.09E+18
 xrange=xrange*parsec2cm
 yrange=yrange*parsec2cm
 zrange=zrange*parsec2cm
